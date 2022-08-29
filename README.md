@@ -1,7 +1,8 @@
 ssh root@{IP}
 {PASS}
 
-apt install sudo \n
+apt install sudo 
+
 sudo apt update && sudo apt upgrade
 
 sudo adduser {USER}
