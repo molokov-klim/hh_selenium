@@ -1,7 +1,7 @@
 ssh root@{IP}
 {PASS}
 
-apt install sudo
+apt install sudo /n
 sudo apt update && sudo apt upgrade
 
 sudo adduser {USER}
