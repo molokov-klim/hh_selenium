@@ -164,7 +164,7 @@ class MyChromeWebdriver:
                 if (temp_link.__contains__("/search/")):
                     link = temp_link
 
-            
+
             time.sleep(5)
             return link
 
@@ -216,6 +216,7 @@ class MyChromeWebdriver:
             service=self.service,
             options=self.options
         )
+        manual_links = []
         try:
             for vacancy_link in vacancy_links:
                 print(vacancy_links.index(vacancy_link), " of ", len(vacancy_links))
@@ -231,15 +232,25 @@ class MyChromeWebdriver:
                     letter_input.submit()
                     print("submit letter")
                 except NoSuchElementException:
-                    #ЗДЕСЬ НУЖНО ПОДБИРАТЬ ССЫЛКУ И ПОТОМ ОТПРАВИТЬ ИХ В ТЕЛЕГРАМ
+                    manual_links.append(vacancy_link)
                     print("pass")
                     continue
-
+            write_to_file(manual_links)
         except Exception as ex:
             print(ex)
         finally:
             driver.close()
             driver.quit()
+
+
+
+def write_to_file(data):
+    filename = "manual_links.txt"
+    file=open(filename,'w')
+    for items in data:
+        file.writelines([items])
+    file.close()
+
 
 
 if __name__ == "__main__":
@@ -254,7 +265,7 @@ if __name__ == "__main__":
         print("Доступные резюме: ")
         for i in list_cv:
             print(i)
-        # cv_name = input("Пожалуйста введите название резюме: ") 
+        # cv_name = input("Пожалуйста введите название резюме: ")
         cv_name = "QA Engineer"
         print("Поиск по резюме: ", cv_name)
         href = my_driver.get_recommendations_from_cv(cv_name)
@@ -262,9 +273,7 @@ if __name__ == "__main__":
         # transmittal_letter = input("Введите сопроводительное письмо: ")
         transmittal_letter = "Добрый день!\nПрошу рассмотреть мою кандидатуру на должность: Тестировщик / QA Engineer (manual / automation).\n\nХард скилы:\nPython (pytest, psycopg2, django rest framework + orm, beautiful soup, selenium, aiogram, asyncio, openxlsx).\nJavaScript (jQuery, postman scripts) + HTML\CSS.\nJava (Android), C++ (Qt).\n\nИструменты:\nGit, bash, postman, jmeter, dbeaver, devtools, docker.\n\nGits:\nhttps://gitlab.com/molokov-klim/\nhttps://github.com/molokov-klim/"
         # resp_qty = int(input("Введите количество откликов (максимум 200): "))
-        resp_qty = 200
-        if resp_qty > 200:
-            resp_qty = 200
+        resp_qty = 300
         list_vacancy_links = my_driver.get_vacancy_links(href, resp_qty)
         print("Список ссылок на вакансии: ", len(list_vacancy_links), "шт")
         #print(list_vacancy_links)
